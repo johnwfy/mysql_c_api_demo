@@ -1,11 +1,11 @@
 /*
- * @Author: john 
- * @Date: 2017-03-11 12:23:25 
+ * @Author: john
+ * @Date: 2017-03-11 12:23:25
  * @Last Modified by: john
  * @Last Modified time: 2017-03-11 12:30:37
  * @Description: use mysql c api operation db...
  */
-// mysql_helper.h
+ // mysql_helper.h
 
 #ifndef _MYSQL_HELPER_H_
 #define _MYSQL_HELPER_H_
@@ -21,76 +21,76 @@ using namespace std;
 
 namespace MysqlHelper
 {
-    /*********************
-    *@brief 数据库异常结构体
-    **********************/
-    struct MysqlException
-    {
-        MysqlHelper(const string &szBuffer) : m_errInfo(szBuffer) {};
-        ~MysqlHelper() throw() {};
+	/*********************
+	*@brief 数据库异常结构体
+	**********************/
+	struct MysqlException
+	{
+		MysqlHelper(const string &szBuffer) : m_errInfo(szBuffer) {};
+		~MysqlHelper() throw() {};
 
-        string m_errInfo;
-    };
-    
-    /***********************
-    * @brief 数据库配置接口
-    ***********************/
-    struct MysqlConf
-    {
-        string _szHost;             // 主机地址
-        string _szUser;             // 用户名
-        string _szPasswd;           // 密码
-        string _szDBName;           // 数据库
-        string _szCharSet;          // 编码字符集
-        int _iPort;                 // 端口
-        int _iFlag;                 // 标记
+		string m_errInfo;
+	};
 
-        MysqlConf() : _iPort(0), _iFlag(0) {};
-        
-        /**********************************
-        * @brief 读取数据库配置
-        * @param mpParam 存放数据库配置的map 
-        *        dbhost: 主机地址
-        *        dbuser:用户名
-        *        dbpass:密码
-        *        dbname:数据库名称
-        *        dbport:端口
-        **********************************/
-        void LoadDataFromMap(const map<string, string> &mpParam)
-        {
-            map<string, string> mpTempParam = mpParam;
+	/***********************
+	* @brief 数据库配置接口
+	***********************/
+	struct MysqlConf
+	{
+		string _szHost;             // 主机地址
+		string _szUser;             // 用户名
+		string _szPasswd;           // 密码
+		string _szDBName;           // 数据库
+		string _szCharSet;          // 编码字符集
+		int _iPort;                 // 端口
+		int _iFlag;                 // 标记
 
-            _szHost = mpTempParam["dbhost"];
-            _szUser = mpTempParam["dbuser"];
-            _szPasswd = mpTempParam["dbpass"];
-            _szDBName = mpTempParam["dbname"];
-            _szCharSet = mpTempParam["charset"];
-            _iPort = atoi(mpTempParam["dbport"].c_str());
-            _iFlag = 0;
+		MysqlConf() : _iPort(0), _iFlag(0) {};
 
-            if(mpTempParam["dbport"] == "")
-            {
-                _iPort = 3306;
-            }
+		/**********************************
+		* @brief 读取数据库配置
+		* @param mpParam 存放数据库配置的map
+		*        dbhost: 主机地址
+		*        dbuser:用户名
+		*        dbpass:密码
+		*        dbname:数据库名称
+		*        dbport:端口
+		**********************************/
+		void LoadDataFromMap(const map<string, string> &mpParam)
+		{
+			map<string, string> mpTempParam = mpParam;
 
-        }
+			_szHost = mpTempParam["dbhost"];
+			_szUser = mpTempParam["dbuser"];
+			_szPasswd = mpTempParam["dbpass"];
+			_szDBName = mpTempParam["dbname"];
+			_szCharSet = mpTempParam["charset"];
+			_iPort = atoi(mpTempParam["dbport"].c_str());
+			_iFlag = 0;
 
-    };
+			if (mpTempParam["dbport"] == "")
+			{
+				_iPort = 3306;
+			}
 
-    /**************************************************************
-    * @brief:MySQL数据库操作类 
-    * @feature:非线程安全，通常一个线程一个MysqlHelper对象；
-    *          对于insert/update可以有更好的函数封装，保证SQL注入；
-    *          MysqlHelper::DB_INT表示组装sql语句时，不加””和转义；
-    *          MysqlHelper::DB_STR表示组装sql语句时，加””并转义；
-    **************************************************************/
-    class MysqlHelper
-    {
-    public:
-        /**
-        * @brief 构造函数
-        */
-        MysqlHelper();
+		}
+
+	};
+
+	/**************************************************************
+	* @brief:MySQL数据库操作类
+	* @feature:非线程安全，通常一个线程一个MysqlHelper对象；
+	*          对于insert/update可以有更好的函数封装，保证SQL注入；
+	*          MysqlHelper::DB_INT表示组装sql语句时，不加””和转义；
+	*          MysqlHelper::DB_STR表示组装sql语句时，加””并转义；
+	**************************************************************/
+	class MysqlHelper
+	{
+	public:
+		/**
+		* @brief 构造函数
+		*/
+		MysqlHelper();
 
 		/**
 		* @brief 构造函数
@@ -113,7 +113,7 @@ namespace MysqlHelper
 		/**
 		* @brief 析构函数.
 		*/
-        ~MysqlHelper();
+		~MysqlHelper();
 
 		/**
 		* @brief 初始化.
@@ -387,8 +387,8 @@ namespace MysqlHelper
 		* @return int
 		*/
 		size_t GetAffectedRows();
-    
-    protected:
+
+	protected:
 		/**
 		* @brief copy contructor，只申明,不定义,保证不被使用
 		*/
@@ -421,7 +421,7 @@ namespace MysqlHelper
 		*/
 		string m_szLastSQL;
 
-    };
+	};
 
 }
 
