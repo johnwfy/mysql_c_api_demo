@@ -9,13 +9,30 @@
 #include <fcntl.h>
 #include <sys/shm.h>
 #include <time.h>
+#include <iostream>
+
+#include "mysqlHelper.h"
+using namespace mysqlhelper;
+using namespace std;
 
 #define MYPORT  8887
 #define QUEUE   20
 #define BUFFER_SIZE 1024
 
+
 int main()
 {
+	//初始化mysql对象并建立连接
+	MysqlHelper mysqlHelper;
+	mysqlHelper.init("45.78.44.136", "root", "Xx753951xx", "mysql_ip_record");
+	try {
+		mysqlHelper.connect();
+	}
+	catch (MysqlHelper_Exception& excep) {
+		cout << excep.errorInfo;
+		return -1;
+	}
+
 	///定义sockfd
 	int server_sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -59,11 +76,28 @@ int main()
 		perror("connect");
 		exit(1);
 	}
+
 	char ipstr[128];
 	time_t tNow = time(NULL);
 	printf("client ip %s\tport %d\tnow is %s\n",
 		inet_ntop(AF_INET, &client_addr.sin_addr.s_addr, ipstr, sizeof(ipstr)),
 		ntohs(client_addr.sin_port), ctime(&tNow));
+	char timestr[128];
+	sprintf(timestr, "%ld", (long)tNow);
+
+	MysqlHelper::RECORD_DATA record;
+	record.insert(make_pair("timeStamp", make_pair(MysqlHelper::DB_INT, timestr)));
+	record.insert(make_pair("ipAddr", make_pair(MysqlHelper::DB_STR, ipstr)));
+	record.insert(make_pair("strTime", make_pair(MysqlHelper::DB_STR, ctime(&tNow))));
+	int res = 0;
+	try {
+		res = mysqlHelper.insertRecord("ip_time_table", record);
+	}
+	catch (MysqlHelper_Exception& excep) {
+		cout << excep.errorInfo;
+		return -1;
+	}
+	cout << "res:" << res << " insert successfully " << endl;
 
 	while (1)
 	{
