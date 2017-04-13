@@ -22,7 +22,7 @@ using namespace std;
 
 int main()
 {
-	//初始化mysql对象并建立连接
+	///初始化mysql对象并建立连接
 	MysqlHelper mysqlHelper;
 	mysqlHelper.init("45.78.44.136", "root", "Xx753951xx", "mysql_ip_record");
 	try {
